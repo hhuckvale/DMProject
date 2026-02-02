@@ -343,7 +343,7 @@ for event_index, corrected_tempVolt in enumerate(corrected_tempVolts):
     time_above_3sigma, first_3sigma_cross, second_3sigma_cross = calc_time_above_3sigma(corrected_tempVolt, sampleTimes, sigma_b_array[event_index], mean_b_array[event_index], first_peak_index)
     closest_index = time_index(first_3sigma_cross, sampleTimes)
     single_integral = single_charge_integral(corrected_tempVolt, sampleTimes, closest_index)
-    total_time = total_time_above_threshold(corrected_tempVolt, sampleTimes, sigma_b, n)
+    total_time = total_time_above_threshold(corrected_tempVolt, sampleTimes, sigma_b_array[event_index], n)
 
     event_index_array.append(true_event_number)
     all_amplitudes.append(amplitude)
