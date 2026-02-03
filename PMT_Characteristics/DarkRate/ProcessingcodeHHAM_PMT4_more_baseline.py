@@ -59,6 +59,7 @@ tempVolts = [-v for v in negVolts]
 
 """variables which can be changed"""
 baseline_end_frac = 0.15
+baseline_start_frac_last = 0.9
 pulse_end_frac = 0.99
 amplitude_start_frac = 0.1
 amplitude_end_frac = 1
@@ -70,8 +71,9 @@ zoom=0.0005 #the max x coordinate for zooming in on this histogram (looking at r
 
 
 def calcbaseline(tempVolt, samples):
-    baseline_voltages = tempVolt[0: int(baseline_end_frac*samples[0])]
-    mean_b = np.mean(baseline_voltages)
+    baseline_voltages = tempVolt[0: int(baseline_end_frac*samples[0])] + tempVolt[int(baseline_start_frac_last*samples[0]): samples[0]]
+    mean_baseline_voltages = tempVolt[0: int(baseline_end_frac*samples[0])]
+    mean_b = np.mean(mean_baseline_voltages)
     sigma_b = np.std(baseline_voltages, ddof=1)
     correct_tempVolt = tempVolt - mean_b
     return mean_b, sigma_b, correct_tempVolt
