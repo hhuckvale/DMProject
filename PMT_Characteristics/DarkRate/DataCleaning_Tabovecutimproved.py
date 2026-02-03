@@ -97,8 +97,8 @@ else:
 good_sigma = cleaned_df['sd_baseline'] < ((mu_sb +15*sigma_sb) * 1e-3)
 cleaned_df = cleaned_df[good_sigma]
 
-#good_time = cleaned_df['total_time_above'] < 1e-8
-#cleaned_df = cleaned_df[good_time]
+good_time = cleaned_df['total_time_above'] < 1.75e-8
+cleaned_df = cleaned_df[good_time]
 
 #export the cleaned data to another csv
 cleaned_df.to_csv(file_path, sep=',', encoding='utf-8-sig', index=True, header=True)

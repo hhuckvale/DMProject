@@ -45,7 +45,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_off"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_PMT4.py "$sub_folder" "${fnm}_${run}_off" 11 PMT4_Processed_totaltimecolumn
+        python ProcessingcodeHHAM_PMT4_more_baseline.py "$sub_folder" "${fnm}_${run}_off" 11 PMT4_Processed_morebaseline
     done
 
     #loop over on trials
@@ -53,7 +53,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_on"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_PMT4.py "$sub_folder" "${fnm}_${run}_on" 11 PMT4_Processed_totaltimecolumn
+        python ProcessingcodeHHAM_PMT4_more_baseline.py "$sub_folder" "${fnm}_${run}_on" 11 PMT4_Processed_morebaseline
     done
 done
 
