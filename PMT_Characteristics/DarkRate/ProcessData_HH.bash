@@ -1,11 +1,11 @@
 #!/bin/bash
 
-sub_folder="PMT7_rawdata"
-#voltages=("1750" "1800" "1850" "1900" "1950" "2000")
+sub_folder="PMT5_rawdata"
+voltages=("1750" "1800" "1850" "1900" "1950" "2000")
 #date=141125
-#date=020226
-voltages=("1750" "1800")
-date=300126
+date=270126
+#voltages=("1750" "1800")
+#date=300126
 
 #arrays of trials for each voltage (on and off)
 arrayOff0=("1" "2" "3") #for 1850
@@ -23,7 +23,7 @@ arrayOn4=("1" "2" "3")
 arrayOn5=("1" "2" "3")
 
 #names of sub-arrays
-arrayOffNames=(arrayOff0 arrayOff1 arrayOff2 arrayOff3 arrayOff4 arrayOff5)
+#arrayOffNames=(arrayOff0 arrayOff1 arrayOff2 arrayOff3 arrayOff4 arrayOff5)
 arrayOnNames=(arrayOn0 arrayOn1 arrayOn2 arrayOn3 arrayOn4 arrayOn5)
 #arrayOffNames=(arrayOff0 arrayOff1)
 #arrayOnNames=(arrayOn0 arrayOn1)
@@ -45,7 +45,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_off"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_PMT4_valueinlast10.py "$sub_folder" "${fnm}_${run}_off" 27 PMT7_Processed_valueatend
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_off" 24 PMT5_Processed_24sig
     done
 
     #loop over on trials
@@ -53,7 +53,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_on"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_PMT4_valueinlast10.py "$sub_folder" "${fnm}_${run}_on" 27 PMT7_Processed_valueatend
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_on" 24 PMT5_Processed_24sig
     done
 done
 
