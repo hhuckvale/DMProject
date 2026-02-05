@@ -19,11 +19,43 @@ file_path = os.path.join(os.getcwd(), folder_out, filename_out)
 #read CSV
 csv_path = os.path.join(os.getcwd(), folder_in, f"{filename_in}.csv")
 df = pd.read_csv(csv_path)
+df["file"] = csv_path
 
 #make data frame for cleaned data
 cleaned_df = df.copy()
 
+# extract the voltage calue
+cleaned_df["voltage"] = (
+    cleaned_df["file"]
+    .str.extract(r"darkrate_(\d+)_")   # grab the number after darkrate_
+    .astype(int)
+)
+# voltage dependent amplitude cuts
+time_windows = {
+    1750: 0.4e-8,
+    1800: 0.45e-8,
+    1850: 0.45e-8,
+    1900: 0.5e-8,
+    1950: 0.55e-8,
+    2000: 0.6e-8
+}
 
+def time_cut(row):
+    V = row["voltage"]
+    T = row["total_time_above"]
+
+    if V not in time_windows:
+        return False
+
+    if pd.isna(T):
+        return False   # or True, depending on your physics
+
+    return T <= time_windows[V]
+
+
+
+#sigma_thresh = df["total_time_above"] > 0 #keep events which cross the threshold
+#cleaned_df = cleaned_df[sigma_thresh]
 
 
 
@@ -36,7 +68,7 @@ n, bins, patches = plt.hist(sigma_b_array_mV, bins=sb_number_of_bins, color='sky
 bin_centers = 0.5 * (bins[1:] + bins[:-1])
 MAX_ITERATIONS = 3
 SIGMA_THRESHOLD = 3.0  # Remove points > 3 standard deviations away
-fit_mask = (bin_centers >=0) & (bin_centers <=2.5)
+fit_mask = (bin_centers >=0) & (bin_centers <=2)
 bin_centers_filtered = bin_centers[fit_mask]
 n_filtered = n[fit_mask]
 X_fit = bin_centers_filtered.copy()
@@ -87,15 +119,26 @@ else:
     err_mu = np.sqrt(final_pcov[1,1])
     err_sigma = np.sqrt(final_pcov[2,2])
 
-good_sigma = cleaned_df['sd_baseline'] < ((mu_sb +20*sigma_sb) * 1e-3)
+good_sigma = cleaned_df['sd_baseline'] < ((mu_sb +15*sigma_sb) * 1e-3)
 cleaned_df = cleaned_df[good_sigma]
+
+# cut on total time above 
+cleaned_df = cleaned_df[
+    cleaned_df["voltage"].isin(time_windows.keys())
+]
+
+cleaned_df = cleaned_df[
+    cleaned_df["total_time_above"] <=
+    cleaned_df["voltage"].map(time_windows)
+]
+#good_time = cleaned_df['total_time_above'] < 1e-8
+#cleaned_df = cleaned_df[good_time]
+
 
 #15sigma threshold clean
 sigma_thresh = cleaned_df["time_above_threshold"] > 0 #keep events which cross the threshold
 cleaned_df = cleaned_df[sigma_thresh]
 
-#good_time = cleaned_df['total_time_above'] < 1e-8
-#cleaned_df = cleaned_df[good_time]
 
 #export the cleaned data to another csv
 cleaned_df.to_csv(file_path, sep=',', encoding='utf-8-sig', index=True, header=True)

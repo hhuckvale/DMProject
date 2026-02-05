@@ -71,7 +71,7 @@ zoom=0.0005 #the max x coordinate for zooming in on this histogram (looking at r
 
 
 def calcbaseline(tempVolt, samples):
-    baseline_voltages = tempVolt[0: int(baseline_end_frac*samples[0])] + tempVolt[int(baseline_start_frac_last*samples[0]): samples[0]]
+    baseline_voltages = tempVolt[0: int(baseline_end_frac*samples[0])]
     mean_baseline_voltages = tempVolt[0: int(baseline_end_frac*samples[0])]
     mean_b = np.mean(mean_baseline_voltages)
     sigma_b = np.std(baseline_voltages, ddof=1)
@@ -294,7 +294,16 @@ def single_charge_integral(corrected_tempVolt, sampleTimes, closest_index):
     #return a single number for the integral of one event
     return single_integral
 
-
+def value_near_end(corrected_tempVolt, sigma_b, samples):
+    end_window_frac = 0.9
+    thresh_voltage = 5 * sigma_b
+    end_window_volts = corrected_tempVolt[int(samples[0]*end_window_frac):]
+    if np.any(end_window_volts > thresh_voltage):
+        value_end = 1
+    else:
+        value_end = 0
+    return value_end
+    
 
 def correcting_tempVolts(tempVolts, mean_b):
     corrected_tempVolts = []
@@ -302,6 +311,7 @@ def correcting_tempVolts(tempVolts, mean_b):
         corrected = tempVolt - mean_b[i]
         corrected_tempVolts.append(corrected)
     return corrected_tempVolts
+
 
 
 
@@ -326,6 +336,7 @@ all_second_t_3sig = []
 all_closest_indices = []
 all_integrals = []
 all_number_of_peaks = []
+all_value_end = []
 
 for tempVolt in tempVolts:
     mean_b, sigma_b, corrected_tempVolt = calcbaseline(tempVolt, samples)
@@ -346,6 +357,7 @@ for event_index, corrected_tempVolt in enumerate(corrected_tempVolts):
     closest_index = time_index(first_3sigma_cross, sampleTimes)
     single_integral = single_charge_integral(corrected_tempVolt, sampleTimes, closest_index)
     total_time = total_time_above_threshold(corrected_tempVolt, sampleTimes, sigma_b_array[event_index], n)
+    value_end = value_near_end(corrected_tempVolt, sigma_b_array[event_index], samples)
 
     event_index_array.append(true_event_number)
     all_amplitudes.append(amplitude)
@@ -364,6 +376,7 @@ for event_index, corrected_tempVolt in enumerate(corrected_tempVolts):
     all_integrals.append(single_integral)
     all_number_of_peaks.append(number_of_peaks)
     all_total_time_above.append(total_time)
+    all_value_end.append(value_end)
 
 all_amplitudes = np.array(all_amplitudes)
 all_peak_times = np.array(all_peak_times)
@@ -381,6 +394,7 @@ all_closest_indices = np.array(all_closest_indices)
 all_integrals = np.array(all_integrals)
 all_number_of_peaks = np.array(all_number_of_peaks)
 all_total_time_above = np.array(all_total_time_above)
+all_value_end = np.array(all_value_end)
 
 print('Analysis done, now printing plots')
 
@@ -409,7 +423,8 @@ df = pd.DataFrame({
             'second_threshold_crossing': all_second_crossing,
             'integral_pC': all_integrals_picocharge,
             'peaks_over_threshold': all_number_of_peaks,
-            'event_timestamps' : event_timestamps[:-1]                
+            'event_timestamps' : event_timestamps[:-1],
+            'value_at_end': all_value_end                
             })
 
 
