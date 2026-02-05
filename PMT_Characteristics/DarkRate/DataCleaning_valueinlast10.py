@@ -25,12 +25,8 @@ cleaned_df = df.copy()
 
 
 
-#15sigma threshold clean
-#sigma_thresh = df["time_above_threshold"] > 0 #keep events which cross the threshold
-#cleaned_df = cleaned_df[sigma_thresh]
 
-sigma_thresh = df["total_time_above"] > 0 #keep events which cross the threshold
-cleaned_df = cleaned_df[sigma_thresh]
+
 
 
 
@@ -94,11 +90,15 @@ else:
     err_mu = np.sqrt(final_pcov[1,1])
     err_sigma = np.sqrt(final_pcov[2,2])
 
-good_sigma = cleaned_df['sd_baseline'] < ((mu_sb +15*sigma_sb) * 1e-3)
+good_sigma = cleaned_df['sd_baseline'] < ((mu_sb +20*sigma_sb) * 1e-3)
 cleaned_df = cleaned_df[good_sigma]
 
-good_time = cleaned_df['total_time_above'] < 1.75e-8
-cleaned_df = cleaned_df[good_time]
+#15sigma threshold clean
+sigma_thresh = cleaned_df["time_above_threshold"] > 0 #keep events which cross the threshold
+cleaned_df = cleaned_df[sigma_thresh]
+
+good_voltage = cleaned_df['value_at_end'] < 1
+cleaned_df = cleaned_df[good_voltage]
 
 #export the cleaned data to another csv
 cleaned_df.to_csv(file_path, sep=',', encoding='utf-8-sig', index=True, header=True)
