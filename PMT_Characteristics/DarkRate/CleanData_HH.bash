@@ -1,7 +1,7 @@
 #!/bin/bash
 
-input_folder="PMT5_AllProcessed" 
-output_folder="PMT5_Cleaned"
+input_folder="PMT1_AllProcessed" 
+output_folder="PMT1_Cleaned"
 
 for csv_file in "$input_folder"/*.csv;
 do

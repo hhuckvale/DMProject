@@ -19,11 +19,13 @@ file_path = os.path.join(os.getcwd(), folder_out, filename_out)
 #read CSV
 csv_path = os.path.join(os.getcwd(), folder_in, f"{filename_in}.csv")
 df = pd.read_csv(csv_path)
-
+print(len(df))
 #make data frame for cleaned data
 cleaned_df = df.copy()
+cleaned_df = cleaned_df.dropna(subset=['amplitude', 'time_above_threshold', 'total_time_above', 'event_timestamps', 'value_at_end'])
+print(len(cleaned_df))
 
-
+'''
 #baseline cut
 sigma_b_array_mV = df['sd_baseline'].to_numpy() * 1e3
 def gaussian_sb(sigma_b_array_mV, amp,  mu, sigma):
@@ -87,17 +89,25 @@ else:
 good_sigma = cleaned_df['sd_baseline'] < ((mu_sb +15*sigma_sb) * 1e-3)
 cleaned_df = cleaned_df[good_sigma]
 
-
+'''
 
 #15sigma threshold clean
 sigma_thresh = cleaned_df["time_above_threshold"] > 0 #keep events which cross the threshold
 cleaned_df = cleaned_df[sigma_thresh]
 
-good_time = cleaned_df['total_time_above'] < 4e-8
+# Peak amplitude > trigger level (change based on trigger level)
+amplitude_cut = cleaned_df["amplitude"] > 8e-3
+cleaned_df = cleaned_df[amplitude_cut]
+
+# Total time above threshold clean
+good_time = cleaned_df['total_time_above'] < 2e-8
 cleaned_df = cleaned_df[good_time]
 
+# disregar if there is a value in last 10% of data that exceeds 5 sigma baseline
 good_voltage = cleaned_df['value_at_end'] < 1
 cleaned_df = cleaned_df[good_voltage]
+
+print(len(cleaned_df['amplitude']))
 
 #export the cleaned data to another csv
 cleaned_df.to_csv(file_path, sep=',', encoding='utf-8-sig', index=True, header=True)

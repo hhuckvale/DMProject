@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sub_folder="PMT5_rawdata"
+sub_folder="PMT1_rawdata"
 voltages=("1750" "1800" "1850" "1900" "1950" "2000")
-#date=141125
-date=270126
+date=241125
+#date=190126
 #voltages=("1750" "1800")
 #date=300126
 
@@ -23,7 +23,7 @@ arrayOn4=("1" "2" "3")
 arrayOn5=("1" "2" "3")
 
 #names of sub-arrays
-#arrayOffNames=(arrayOff0 arrayOff1 arrayOff2 arrayOff3 arrayOff4 arrayOff5)
+arrayOffNames=(arrayOff0 arrayOff1 arrayOff2 arrayOff3 arrayOff4 arrayOff5)
 arrayOnNames=(arrayOn0 arrayOn1 arrayOn2 arrayOn3 arrayOn4 arrayOn5)
 #arrayOffNames=(arrayOff0 arrayOff1)
 #arrayOnNames=(arrayOn0 arrayOn1)
@@ -45,7 +45,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_off"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_off" 24 PMT5_Processed_24sig
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_off" 16 PMT1_Processed_16sig
     done
 
     #loop over on trials
@@ -53,7 +53,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_on"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_on" 24 PMT5_Processed_24sig
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_on" 16 PMT1_Processed_16sig
     done
 done
 
