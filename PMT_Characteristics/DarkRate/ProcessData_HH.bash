@@ -1,11 +1,11 @@
 #!/bin/bash
 
-sub_folder="PMT7_rawdata"
-#voltages=("1750" "1800" "1850" "1900" "1950" "2000")
-#date=141125
-#date=020226
-voltages=("1750" "1800")
-date=300126
+sub_folder="PMT1_rawdata"
+voltages=("1750" "1800" "1850" "1900" "1950" "2000")
+date=241125
+#date=190126
+#voltages=("1750" "1800")
+#date=300126
 
 #arrays of trials for each voltage (on and off)
 arrayOff0=("1" "2" "3") #for 1850
@@ -45,7 +45,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_off"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_PMT4_valueinlast10.py "$sub_folder" "${fnm}_${run}_off" 27 PMT7_Processed_valueatend
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_off" 16 PMT1_Processed_16sig
     done
 
     #loop over on trials
@@ -53,7 +53,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_on"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_PMT4_valueinlast10.py "$sub_folder" "${fnm}_${run}_on" 27 PMT7_Processed_valueatend
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_on" 16 PMT1_Processed_16sig
     done
 done
 
