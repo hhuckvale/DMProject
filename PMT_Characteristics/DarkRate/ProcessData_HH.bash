@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sub_folder="PMT1_rawdata"
+sub_folder="PMT3_rawdata"
 voltages=("1750" "1800" "1850" "1900" "1950" "2000")
-date=241125
-#date=190126
+#date=241125
+date=190126
 #voltages=("1750" "1800")
 #date=300126
 
@@ -45,7 +45,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_off"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_off" 16 PMT1_Processed_16sig
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_off" 29 PMT3_Processed_29
     done
 
     #loop over on trials
@@ -53,7 +53,7 @@ do
     do
         filename="${sub_folder}/${fnm}_${run}_on"
         echo "Doing this file now: $filename"
-        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_on" 16 PMT1_Processed_16sig
+        python ProcessingcodeHHAM_final.py "$sub_folder" "${fnm}_${run}_on" 29 PMT3_Processed_29
     done
 done
 
