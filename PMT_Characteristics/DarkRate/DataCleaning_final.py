@@ -96,11 +96,11 @@ sigma_thresh = cleaned_df["time_above_threshold"] > 0 #keep events which cross t
 cleaned_df = cleaned_df[sigma_thresh]
 
 # Peak amplitude > trigger level (change based on trigger level)
-amplitude_cut = cleaned_df["amplitude"] > 8e-3
-cleaned_df = cleaned_df[amplitude_cut]
+#amplitude_cut = cleaned_df["amplitude"] > 8e-3
+#cleaned_df = cleaned_df[amplitude_cut]
 
 # Total time above threshold clean
-good_time = cleaned_df['total_time_above'] < 2e-8
+good_time = cleaned_df['total_time_above'] < 1.5e-8
 cleaned_df = cleaned_df[good_time]
 
 # disregar if there is a value in last 10% of data that exceeds 5 sigma baseline
